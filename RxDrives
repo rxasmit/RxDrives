@@ -1,0 +1,12 @@
+cd C:\Users\user\Documents\Codex\2026-06-15\i-want-you-to-write-a\outputs
+
+echo "# RxDrives" >> README.md
+ren study-library-app.html index.html
+
+git init
+git add README.md index.html start-study-library.bat
+git commit -m "First commit"
+
+git branch -M main
+git remote add origin https://github.com/YOUR-rxasmit/RxDrives.git
+git push -u origin main
