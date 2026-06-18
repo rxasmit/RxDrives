@@ -504,7 +504,49 @@
   </style>
 </head>
 <body>
-  <main class="app-shell">
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+  import {
+    getAuth,
+    GoogleAuthProvider,
+    signInWithPopup,
+    signOut,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    appId: "YOUR_APP_ID"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  document.querySelector("#googleLogin").addEventListener("click", () => {
+    signInWithPopup(auth, provider);
+  });
+
+  document.querySelector("#logout").addEventListener("click", () => {
+    signOut(auth);
+  });
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      document.querySelector("#app").style.display = "block";
+      document.querySelector("#loginScreen").style.display = "none";
+    } else {
+      document.querySelector("#app").style.display = "none";
+      document.querySelector("#loginScreen").style.display = "block";
+    }
+  });
+</script>
+  <main id="app" class="app-shell">
+    <div id="loginScreen">
+  <button id="googleLogin">Sign in with Google</button>
+</div>
     <header class="topbar">
       <div class="brand">
         <div class="brand-mark" aria-hidden="true">
@@ -518,6 +560,7 @@
       <div class="status-pill" title="Internet links open in your browser. Files are stored locally in this app.">
         <span class="status-dot"></span>
         <span id="connectionStatus">Checking connection...</span>
+        <button id="logout" type="button">Logout</button>
       </div>
     </header>
 
@@ -1002,5 +1045,44 @@
       showToast("Something went wrong while starting the app.");
     });
   </script>
+      <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+  import {
+    getAuth,
+    GoogleAuthProvider,
+    signInWithPopup,
+    signOut,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    appId: "YOUR_APP_ID"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  document.querySelector("#googleLogin").addEventListener("click", () => {
+    signInWithPopup(auth, provider);
+  });
+
+  document.querySelector("#logout").addEventListener("click", () => {
+    signOut(auth);
+  });
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      document.querySelector("#app").style.display = "block";
+      document.querySelector("#loginScreen").style.display = "none";
+    } else {
+      document.querySelector("#app").style.display = "none";
+      document.querySelector("#loginScreen").style.display = "block";
+    }
+  });
+</script>
 </body>
 </html>
