@@ -207,10 +207,16 @@ animation: rxdrivesBackground 4s ease-in-out infinite alternate;
     }
 
     .panel {
-      background: rgba(255, 255, 255, .88);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      box-shadow: var(--shadow);
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+
+      border-radius: 18px;
+
+  box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+}
     }
 
     .panel-header {
@@ -672,6 +678,7 @@ animation: rxdrivesBackground 4s ease-in-out infinite alternate;
             Add to library
           </button>
         </form>
+        
       </aside>
 
       <section class="panel">
