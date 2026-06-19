@@ -1,0 +1,1166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RxDrives</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172121;
+      --muted: #62706b;
+      --line: #d7ded8;
+      --paper: #fbfcfa;
+      --panel: #ffffff;
+      --green: #2563eb;
+      --green-dark: #1d4ed8;
+      --amber: #c8851f;
+      --rose: #b64d5c;
+      --blue: #3469a6;
+      --shadow: 0 18px 48px rgba(29, 45, 38, .12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        linear-gradient(120deg, rgba(37, 99, 235, .10), transparent 35%),
+        linear-gradient(245deg, rgba(52, 105, 166, .10), transparent 38%),
+        var(--paper);
+      color: var(--ink);
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .app-shell {
+      width: min(1220px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 36px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      color: var(--green);
+    }
+
+    .brand-mark svg {
+      width: 27px;
+      height: 27px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.45rem, 2vw, 2.25rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: .95rem;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .75);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: #3b82f6;
+      box-shadow: 0 0 0 4px rgba(53, 120, 220, .16);
+    }
+
+    .auth-screen {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .auth-card {
+      width: min(430px, 100%);
+      display: grid;
+      gap: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 24px;
+      background: rgba(255, 255, 255, .92);
+      box-shadow: var(--shadow);
+    }
+
+    .auth-card .brand {
+      align-items: flex-start;
+    }
+
+    .auth-card h1 {
+      font-size: 1.7rem;
+    }
+
+    .auth-status {
+      min-height: 22px;
+      color: var(--muted);
+      font-size: .9rem;
+      line-height: 1.4;
+    }
+
+    .user-pill {
+      display: inline-flex;
+      align-items: center;
+      max-width: 260px;
+      min-height: 42px;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--muted);
+      font-size: .85rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .auth-locked {
+      display: none;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 360px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      background: rgba(255, 255, 255, .88);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel-header {
+      padding: 16px 16px 0;
+    }
+
+    .panel-header h2,
+    .section-title {
+      margin: 0;
+      font-size: 1rem;
+      letter-spacing: 0;
+    }
+
+    .form-stack {
+      display: grid;
+      gap: 12px;
+      padding: 16px;
+    }
+
+    label {
+      display: grid;
+      gap: 7px;
+      color: #31413c;
+      font-size: .86rem;
+      font-weight: 650;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 11px 12px;
+      color: var(--ink);
+      background: #fff;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 86px;
+      resize: vertical;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, .14);
+    }
+
+    .file-zone {
+      position: relative;
+      display: grid;
+      place-items: center;
+      gap: 8px;
+      min-height: 132px;
+      padding: 18px;
+      border: 1.5px dashed #a9b8b0;
+      border-radius: 8px;
+      background: #f8faf7;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .file-zone strong {
+      color: var(--ink);
+      font-size: .95rem;
+    }
+
+    .file-zone input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-height: 42px;
+      padding: 10px 13px;
+      border-radius: 8px;
+      background: #eef3f0;
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .btn svg,
+    .icon-btn svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex: 0 0 auto;
+    }
+
+    .btn.primary {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .btn.primary:hover {
+      background: var(--green-dark);
+    }
+
+    .btn:hover {
+      filter: brightness(.98);
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: minmax(180px, 1fr) 170px 170px;
+      gap: 10px;
+      padding: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding: 0 16px 16px;
+    }
+
+    .stat {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: #fff;
+      min-width: 0;
+    }
+
+    .stat b {
+      display: block;
+      font-size: 1.35rem;
+      line-height: 1;
+    }
+
+    .stat span {
+      display: block;
+      color: var(--muted);
+      font-size: .79rem;
+      margin-top: 6px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 6px;
+      padding: 0 16px 16px;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      padding: 9px 11px;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 750;
+    }
+
+    .tab.active {
+      background: #eaf1ff;
+      color: var(--green-dark);
+    }
+
+    .library {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(245px, 1fr));
+      gap: 12px;
+      padding: 16px;
+    }
+
+    .resource-card {
+      display: grid;
+      gap: 13px;
+      align-content: space-between;
+      min-height: 216px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .resource-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 32px rgba(26, 39, 34, .10);
+    }
+
+    .card-top {
+      display: flex;
+      gap: 11px;
+      min-width: 0;
+    }
+
+    .type-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      color: #fff;
+      font-weight: 850;
+      letter-spacing: 0;
+      font-size: .75rem;
+    }
+
+    .type-pdf { background: var(--rose); }
+    .type-ppt { background: var(--amber); }
+    .type-link { background: var(--blue); }
+    .type-other { background: #69756e; }
+
+    .card-title {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.25;
+      overflow-wrap: anywhere;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: .8rem;
+      margin-top: 5px;
+      overflow-wrap: anywhere;
+    }
+
+    .notes {
+      margin: 0;
+      color: #46554f;
+      font-size: .88rem;
+      line-height: 1.45;
+      overflow-wrap: anywhere;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .chip {
+      max-width: 100%;
+      padding: 5px 8px;
+      border-radius: 8px;
+      background: #f0f3f1;
+      color: #40514b;
+      font-size: .75rem;
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+
+    .card-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      border-top: 1px solid #eef1ef;
+      padding-top: 11px;
+    }
+
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: #f0f4f2;
+      color: #33453f;
+    }
+
+    .icon-btn.danger {
+      color: #963d4c;
+      background: #faeef0;
+    }
+
+    .empty {
+      grid-column: 1 / -1;
+      display: grid;
+      place-items: center;
+      min-height: 310px;
+      border: 1px dashed #b6c2bc;
+      border-radius: 8px;
+      color: var(--muted);
+      text-align: center;
+      padding: 28px;
+      background: rgba(255, 255, 255, .55);
+    }
+
+    .empty strong {
+      display: block;
+      color: var(--ink);
+      margin-bottom: 7px;
+      font-size: 1.1rem;
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      max-width: min(360px, calc(100% - 36px));
+      padding: 12px 14px;
+      border-radius: 8px;
+      background: #172121;
+      color: #fff;
+      box-shadow: var(--shadow);
+      transform: translateY(20px);
+      opacity: 0;
+      pointer-events: none;
+      transition: .2s ease;
+      z-index: 20;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 920px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .app-shell {
+        width: min(100% - 22px, 1220px);
+        padding-top: 14px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .status-pill {
+        white-space: normal;
+      }
+
+      .top-actions {
+        justify-content: flex-start;
+      }
+
+      .row,
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .library {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section id="loginScreen" class="auth-screen">
+    <div class="auth-card">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path><path d="M8 7h8"></path><path d="M8 11h6"></path></svg>
+        </div>
+        <div>
+          <h1>RxDrives</h1>
+          <p class="subtitle">Sign in to open your study drive.</p>
+        </div>
+      </div>
+      <button id="googleLogin" class="btn primary" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.9 12.2c0-.7-.1-1.4-.2-2H12v3.8h5c-.2 1.2-.9 2.2-1.9 2.9v2.4h3.1c1.8-1.7 2.7-4.1 2.7-7.1z"></path><path d="M12 21c2.6 0 4.8-.9 6.3-2.3l-3.1-2.4c-.9.6-2 .9-3.2.9-2.5 0-4.6-1.7-5.4-4H3.4v2.5C4.9 18.8 8.2 21 12 21z"></path><path d="M6.6 13.2c-.2-.6-.3-1.2-.3-1.9s.1-1.3.3-1.9V6.9H3.4C2.8 8.2 2.5 9.5 2.5 11.3s.3 3.1.9 4.4l3.2-2.5z"></path><path d="M12 5.4c1.4 0 2.7.5 3.7 1.5l2.7-2.7C16.8 2.7 14.6 2 12 2 8.2 2 4.9 4.2 3.4 6.9l3.2 2.5c.8-2.3 2.9-4 5.4-4z"></path></svg>
+        Sign in with Google
+      </button>
+      <div id="authStatus" class="auth-status">Loading sign-in...</div>
+    </div>
+  </section>
+
+  <main id="app" class="app-shell auth-locked">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path><path d="M8 7h8"></path><path d="M8 11h6"></path></svg>
+        </div>
+        <div>
+          <h1>RxDrives</h1>
+          <p class="subtitle">Keep books, PPTs, PDFs, and useful web resources in one searchable place.</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <div class="status-pill" title="Internet links open in your browser. Files are stored locally in this app.">
+          <span class="status-dot"></span>
+          <span id="connectionStatus">Checking connection...</span>
+        </div>
+        <span id="userEmail" class="user-pill">Signed in</span>
+        <button id="logout" class="btn" type="button">Logout</button>
+      </div>
+    </header>
+
+    <section class="main-grid">
+      <aside class="panel">
+        <div class="panel-header">
+          <h2>Add study material</h2>
+        </div>
+        <form id="resourceForm" class="form-stack">
+          <label>
+            Material type
+            <select id="resourceKind">
+              <option value="file">PDF / PPT / book file</option>
+              <option value="link">Internet resource link</option>
+            </select>
+          </label>
+
+          <div id="fileFields" class="file-zone">
+            <input id="fileInput" type="file" accept=".pdf,.ppt,.pptx,application/pdf,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation">
+            <strong>Drop or choose a PDF/PPT</strong>
+            <span id="fileName">Books and slides are saved in your browser storage.</span>
+          </div>
+
+          <label id="linkField" class="hidden">
+            Web link
+            <input id="linkInput" type="url" placeholder="https://example.com/video-or-article">
+          </label>
+
+          <label>
+            Title
+            <input id="titleInput" type="text" placeholder="Biology chapter 4, Math formulas..." required>
+          </label>
+
+          <div class="row">
+            <label>
+              Subject
+              <input id="subjectInput" type="text" placeholder="Physics">
+            </label>
+            <label>
+              Tags
+              <input id="tagsInput" type="text" placeholder="exam, chapter 2">
+            </label>
+          </div>
+
+          <label>
+            Notes
+            <textarea id="notesInput" placeholder="Important pages, teacher comments, revision plan..."></textarea>
+          </label>
+
+          <button class="btn primary" type="submit">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+            Add to library
+          </button>
+        </form>
+      </aside>
+
+      <section class="panel">
+        <div class="toolbar">
+          <input id="searchInput" type="search" placeholder="Search title, subject, tags, notes...">
+          <select id="subjectFilter">
+            <option value="all">All subjects</option>
+          </select>
+          <select id="sortSelect">
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+            <option value="title">Title A-Z</option>
+          </select>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><b id="totalCount">0</b><span>Total items</span></div>
+          <div class="stat"><b id="fileCount">0</b><span>Files saved</span></div>
+          <div class="stat"><b id="linkCount">0</b><span>Internet links</span></div>
+        </div>
+
+        <div class="tabs" role="tablist" aria-label="Material filters">
+          <button class="tab active" data-filter="all" type="button">All</button>
+          <button class="tab" data-filter="pdf" type="button">PDF</button>
+          <button class="tab" data-filter="ppt" type="button">PPT</button>
+          <button class="tab" data-filter="link" type="button">Links</button>
+        </div>
+
+        <div id="libraryGrid" class="library" aria-live="polite"></div>
+      </section>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import {
+      getAuth,
+      GoogleAuthProvider,
+      signInWithPopup,
+      signOut,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBYnYH7A4Ksdlx_wVxU6SkNWkv-0TtIKGQ",
+      authDomain: "rxdrives-ed04c.firebaseapp.com",
+      projectId: "rxdrives-ed04c",
+      storageBucket: "rxdrives-ed04c.firebasestorage.app",
+      messagingSenderId: "750034881280",
+      appId: "1:750034881280:web:3a10cb168a82f1c18181e5",
+      measurementId: "G-6B350M0WP2"
+    };
+
+    const loginScreen = document.querySelector("#loginScreen");
+    const appScreen = document.querySelector("#app");
+    const googleLogin = document.querySelector("#googleLogin");
+    const logout = document.querySelector("#logout");
+    const authStatus = document.querySelector("#authStatus");
+    const userEmail = document.querySelector("#userEmail");
+
+    const configReady = Object.values(firebaseConfig).every(value => value && !value.startsWith("PASTE_"));
+
+    function showSignedOut(message = "Sign in with your Google account.") {
+      loginScreen.classList.remove("hidden");
+      appScreen.classList.add("auth-locked");
+      authStatus.textContent = message;
+      googleLogin.disabled = !configReady;
+    }
+
+    function showSignedIn(user) {
+      loginScreen.classList.add("hidden");
+      appScreen.classList.remove("auth-locked");
+      userEmail.textContent = user.email || "Signed in";
+    }
+
+    if (!configReady) {
+      showSignedOut("Add your Firebase config values in this file before Google sign-in will work.");
+    } else {
+      const firebaseApp = initializeApp(firebaseConfig);
+      const auth = getAuth(firebaseApp);
+      const provider = new GoogleAuthProvider();
+
+      googleLogin.addEventListener("click", async () => {
+        authStatus.textContent = "Opening Google sign-in...";
+        try {
+          await signInWithPopup(auth, provider);
+        } catch (error) {
+          authStatus.textContent = error.message || "Google sign-in failed.";
+        }
+      });
+
+      logout.addEventListener("click", async () => {
+        await signOut(auth);
+      });
+
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          showSignedIn(user);
+        } else {
+          showSignedOut();
+        }
+      });
+    }
+  </script>
+
+  <script>
+    const DB_NAME = "study-library-db";
+    const DB_VERSION = 1;
+    const STORE = "resources";
+
+    const icons = {
+      open: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v7"></path><path d="M10 14 21 3"></path><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"></path></svg>',
+      download: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="M7 10l5 5 5-5"></path><path d="M12 15V3"></path></svg>',
+      trash: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>'
+    };
+
+    const state = {
+      db: null,
+      resources: [],
+      typeFilter: "all"
+    };
+
+    const els = {
+      form: document.querySelector("#resourceForm"),
+      kind: document.querySelector("#resourceKind"),
+      fileFields: document.querySelector("#fileFields"),
+      fileInput: document.querySelector("#fileInput"),
+      fileName: document.querySelector("#fileName"),
+      linkField: document.querySelector("#linkField"),
+      linkInput: document.querySelector("#linkInput"),
+      title: document.querySelector("#titleInput"),
+      subject: document.querySelector("#subjectInput"),
+      tags: document.querySelector("#tagsInput"),
+      notes: document.querySelector("#notesInput"),
+      search: document.querySelector("#searchInput"),
+      subjectFilter: document.querySelector("#subjectFilter"),
+      sort: document.querySelector("#sortSelect"),
+      grid: document.querySelector("#libraryGrid"),
+      totalCount: document.querySelector("#totalCount"),
+      fileCount: document.querySelector("#fileCount"),
+      linkCount: document.querySelector("#linkCount"),
+      toast: document.querySelector("#toast"),
+      connection: document.querySelector("#connectionStatus")
+    };
+
+    function openDb() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+        request.onupgradeneeded = () => {
+          const db = request.result;
+          if (!db.objectStoreNames.contains(STORE)) {
+            db.createObjectStore(STORE, { keyPath: "id" });
+          }
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    function transaction(mode = "readonly") {
+      return state.db.transaction(STORE, mode).objectStore(STORE);
+    }
+
+    function getAllResources() {
+      return new Promise((resolve, reject) => {
+        const request = transaction().getAll();
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    function saveResource(resource) {
+      return new Promise((resolve, reject) => {
+        const request = transaction("readwrite").put(resource);
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    function removeResource(id) {
+      return new Promise((resolve, reject) => {
+        const request = transaction("readwrite").delete(id);
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    function showToast(message) {
+      els.toast.textContent = message;
+      els.toast.classList.add("show");
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => els.toast.classList.remove("show"), 2600);
+    }
+
+    function formatBytes(bytes) {
+      if (!bytes) return "";
+      const units = ["B", "KB", "MB", "GB"];
+      let value = bytes;
+      let index = 0;
+      while (value >= 1024 && index < units.length - 1) {
+        value /= 1024;
+        index += 1;
+      }
+      return `${value.toFixed(value >= 10 || index === 0 ? 0 : 1)} ${units[index]}`;
+    }
+
+    function fileTypeFromName(name = "") {
+      const lower = name.toLowerCase();
+      if (lower.endsWith(".pdf")) return "pdf";
+      if (lower.endsWith(".ppt") || lower.endsWith(".pptx")) return "ppt";
+      return "other";
+    }
+
+    function splitTags(value) {
+      return value
+        .split(",")
+        .map(tag => tag.trim())
+        .filter(Boolean);
+    }
+
+    function escapeHtml(value = "") {
+      return value.replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      }[char]));
+    }
+
+    function normalizedSubject(resource) {
+      return resource.subject?.trim() || "No subject";
+    }
+
+    function updateSubjectFilter() {
+      const current = els.subjectFilter.value;
+      const subjects = [...new Set(state.resources.map(normalizedSubject))].sort((a, b) => a.localeCompare(b));
+      els.subjectFilter.innerHTML = '<option value="all">All subjects</option>' + subjects
+        .map(subject => `<option value="${escapeHtml(subject)}">${escapeHtml(subject)}</option>`)
+        .join("");
+      els.subjectFilter.value = subjects.includes(current) ? current : "all";
+    }
+
+    function filteredResources() {
+      const term = els.search.value.trim().toLowerCase();
+      const subject = els.subjectFilter.value;
+
+      let items = state.resources.filter(resource => {
+        const typeMatch = state.typeFilter === "all" || resource.type === state.typeFilter;
+        const subjectMatch = subject === "all" || normalizedSubject(resource) === subject;
+        const haystack = [
+          resource.title,
+          resource.subject,
+          resource.notes,
+          resource.url,
+          ...(resource.tags || [])
+        ].join(" ").toLowerCase();
+        return typeMatch && subjectMatch && (!term || haystack.includes(term));
+      });
+
+      items = [...items].sort((a, b) => {
+        if (els.sort.value === "oldest") return a.createdAt - b.createdAt;
+        if (els.sort.value === "title") return a.title.localeCompare(b.title);
+        return b.createdAt - a.createdAt;
+      });
+
+      return items;
+    }
+
+    function typeLabel(type) {
+      if (type === "pdf") return "PDF";
+      if (type === "ppt") return "PPT";
+      if (type === "link") return "WEB";
+      return "FILE";
+    }
+
+    function renderStats() {
+      els.totalCount.textContent = state.resources.length;
+      els.fileCount.textContent = state.resources.filter(item => item.type !== "link").length;
+      els.linkCount.textContent = state.resources.filter(item => item.type === "link").length;
+    }
+
+    function renderLibrary() {
+      updateSubjectFilter();
+      renderStats();
+
+      const items = filteredResources();
+      if (!items.length) {
+        els.grid.innerHTML = `
+          <div class="empty">
+            <div>
+              <strong>No study material found</strong>
+              <span>Add a PDF, PPT, book, or internet link to build your library.</span>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      els.grid.innerHTML = items.map(resource => {
+        const chips = [normalizedSubject(resource), ...(resource.tags || [])]
+          .filter(Boolean)
+          .map(tag => `<span class="chip">${escapeHtml(tag)}</span>`)
+          .join("");
+        const date = new Date(resource.createdAt).toLocaleDateString();
+        const meta = resource.type === "link"
+          ? `${date} - Internet resource`
+          : `${date} - ${escapeHtml(resource.fileName || "Saved file")} ${resource.size ? "- " + formatBytes(resource.size) : ""}`;
+        const primaryTitle = resource.type === "link" ? "Open link" : "Open file";
+        const secondaryTitle = resource.type === "link" ? "" : "Download file";
+
+        return `
+          <article class="resource-card">
+            <div>
+              <div class="card-top">
+                <div class="type-icon type-${resource.type}">${typeLabel(resource.type)}</div>
+                <div>
+                  <h3 class="card-title">${escapeHtml(resource.title)}</h3>
+                  <div class="meta">${meta}</div>
+                </div>
+              </div>
+              ${resource.notes ? `<p class="notes">${escapeHtml(resource.notes)}</p>` : ""}
+            </div>
+            <div>
+              <div class="chips">${chips}</div>
+              <div class="card-actions">
+                <button class="btn" type="button" data-action="open" data-id="${resource.id}" title="${primaryTitle}">
+                  ${icons.open}
+                  Open
+                </button>
+                <div>
+                  ${resource.type !== "link" ? `<button class="icon-btn" type="button" data-action="download" data-id="${resource.id}" title="${secondaryTitle}">${icons.download}</button>` : ""}
+                  <button class="icon-btn danger" type="button" data-action="delete" data-id="${resource.id}" title="Delete">${icons.trash}</button>
+                </div>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function resetForm() {
+      els.form.reset();
+      els.fileName.textContent = "Books and slides are saved in your browser storage.";
+      setKindMode();
+    }
+
+    function setKindMode() {
+      const isLink = els.kind.value === "link";
+      els.fileFields.classList.toggle("hidden", isLink);
+      els.linkField.classList.toggle("hidden", !isLink);
+      els.fileInput.required = !isLink;
+      els.linkInput.required = isLink;
+    }
+
+    async function addResource(event) {
+      event.preventDefault();
+      const isLink = els.kind.value === "link";
+      const now = Date.now();
+
+      if (isLink) {
+        const url = els.linkInput.value.trim();
+        const resource = {
+          id: crypto.randomUUID(),
+          type: "link",
+          title: els.title.value.trim(),
+          subject: els.subject.value.trim(),
+          tags: splitTags(els.tags.value),
+          notes: els.notes.value.trim(),
+          url,
+          createdAt: now
+        };
+        await saveResource(resource);
+        state.resources.push(resource);
+        resetForm();
+        renderLibrary();
+        showToast("Internet resource added.");
+        return;
+      }
+
+      const file = els.fileInput.files[0];
+      if (!file) {
+        showToast("Choose a PDF or PPT first.");
+        return;
+      }
+
+      const resource = {
+        id: crypto.randomUUID(),
+        type: fileTypeFromName(file.name),
+        title: els.title.value.trim() || file.name,
+        subject: els.subject.value.trim(),
+        tags: splitTags(els.tags.value),
+        notes: els.notes.value.trim(),
+        fileName: file.name,
+        mimeType: file.type || "application/octet-stream",
+        size: file.size,
+        blob: file,
+        createdAt: now
+      };
+
+      await saveResource(resource);
+      state.resources.push(resource);
+      resetForm();
+      renderLibrary();
+      showToast("File saved in RxDrives.");
+    }
+
+    function getResource(id) {
+      return state.resources.find(resource => resource.id === id);
+    }
+
+    function openBlob(resource, download = false) {
+      const url = URL.createObjectURL(resource.blob);
+      if (download) {
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = resource.fileName || resource.title;
+        document.body.append(link);
+        link.click();
+        link.remove();
+        window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+        return;
+      }
+      window.open(url, "_blank", "noopener");
+      window.setTimeout(() => URL.revokeObjectURL(url), 60000);
+    }
+
+    async function handleCardAction(event) {
+      const button = event.target.closest("[data-action]");
+      if (!button) return;
+      const resource = getResource(button.dataset.id);
+      if (!resource) return;
+
+      if (button.dataset.action === "open") {
+        if (resource.type === "link") {
+          window.open(resource.url, "_blank", "noopener,noreferrer");
+        } else {
+          openBlob(resource);
+        }
+      }
+
+      if (button.dataset.action === "download") {
+        openBlob(resource, true);
+      }
+
+      if (button.dataset.action === "delete") {
+        const ok = window.confirm(`Delete "${resource.title}" from your library?`);
+        if (!ok) return;
+        await removeResource(resource.id);
+        state.resources = state.resources.filter(item => item.id !== resource.id);
+        renderLibrary();
+        showToast("Removed from library.");
+      }
+    }
+
+    function updateConnectionStatus() {
+      els.connection.textContent = navigator.onLine ? "Internet available" : "Offline mode";
+    }
+
+    async function init() {
+      if (!("indexedDB" in window)) {
+        els.grid.innerHTML = `<div class="empty"><div><strong>Browser storage is unavailable</strong><span>Please use a modern browser to save files.</span></div></div>`;
+        return;
+      }
+
+      state.db = await openDb();
+      state.resources = await getAllResources();
+      setKindMode();
+      updateConnectionStatus();
+      renderLibrary();
+    }
+
+    els.kind.addEventListener("change", setKindMode);
+    els.fileInput.addEventListener("change", () => {
+      const file = els.fileInput.files[0];
+      els.fileName.textContent = file ? `${file.name} - ${formatBytes(file.size)}` : "Books and slides are saved in your browser storage.";
+      if (file && !els.title.value.trim()) els.title.value = file.name.replace(/\.[^.]+$/, "");
+    });
+    els.form.addEventListener("submit", addResource);
+    els.search.addEventListener("input", renderLibrary);
+    els.subjectFilter.addEventListener("change", renderLibrary);
+    els.sort.addEventListener("change", renderLibrary);
+    els.grid.addEventListener("click", handleCardAction);
+    window.addEventListener("online", updateConnectionStatus);
+    window.addEventListener("offline", updateConnectionStatus);
+
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(item => item.classList.remove("active"));
+        tab.classList.add("active");
+        state.typeFilter = tab.dataset.filter;
+        renderLibrary();
+      });
+    });
+
+    init().catch(error => {
+      console.error(error);
+      showToast("Something went wrong while starting the app.");
+    });
+  </script>
+</body>
+</html>
