@@ -32,10 +32,10 @@
   radial-gradient(circle at 52% 88%, rgba(15, 49, 103, 0.62), transparent 38%),
   linear-gradient(135deg, #eef5ff 0%, #dbeafe 45%, #f8fbff 100%);
 background-size: 180% 180%;
-animation: RxDrivesBackground 4s ease-in-out infinite alternate;
+animation: rxdrivesBackground 4s ease-in-out infinite alternate;
   color: var(--ink);
 }
-@keyframes RxDrivesBackground {
+@keyframes rxdrivesBackground {
   0% {
     background-position: 0% 20%, 100% 10%, 50% 100%, 0% 50%;
   }
@@ -74,6 +74,12 @@ animation: RxDrivesBackground 4s ease-in-out infinite alternate;
       justify-content: space-between;
       gap: 18px;
       margin-bottom: 18px;
+      background: rgb(255, 255, 255, 0.75);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px 20px;
+      box-shadow: var(--shadow);
+      
     }
 
     .brand {
@@ -207,7 +213,7 @@ animation: RxDrivesBackground 4s ease-in-out infinite alternate;
     }
 
     .panel {
-      background: rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.75);
       border: 1px solid rgba(255, 255, 255, 0.35);
 
       backdrop-filter: blur(22px);
@@ -223,7 +229,12 @@ animation: RxDrivesBackground 4s ease-in-out infinite alternate;
       padding: 16px 16px 0;
     }
 
-    .panel-header h2,
+    .panel-header h2 {
+      margin: 0;
+      font-size: 1rem;
+      letter-spacing: 0;
+      padding-left: 8px;
+    }
     .section-title {
       margin: 0;
       font-size: 1rem;
@@ -239,7 +250,7 @@ animation: RxDrivesBackground 4s ease-in-out infinite alternate;
     label {
       display: grid;
       gap: 7px;
-      color: #31413c;
+      color: #000000;
       font-size: .86rem;
       font-weight: 650;
     }
@@ -644,7 +655,7 @@ animation: RxDrivesBackground 4s ease-in-out infinite alternate;
           <div id="fileFields" class="file-zone">
             <input id="fileInput" type="file" accept=".pdf,.ppt,.pptx,application/pdf,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation">
             <strong>Drop or choose a PDF/PPT</strong>
-            <span id="fileName">Books and slides are saved in your browser storage.</span>
+            <span id="fileName">Uploaded Documents Are Stored In The Local Storage.</span>
           </div>
 
           <label id="linkField" class="hidden">
@@ -654,17 +665,17 @@ animation: RxDrivesBackground 4s ease-in-out infinite alternate;
 
           <label>
             Title
-            <input id="titleInput" type="text" placeholder="Anatomy, Pharmacology..." required>
+            <input id="titleInput" type="text" placeholder="Anatomy, Pharmacology, Physiology..." required>
           </label>
 
           <div class="row">
             <label>
               Subject
-              <input id="subjectInput" type="text" placeholder="Physiology">
+              <input id="subjectInput" type="text" placeholder="Physics">
             </label>
             <label>
               Tags
-              <input id="tagsInput" type="text" placeholder="exam, chapter 1">
+              <input id="tagsInput" type="text" placeholder="exam, chapter 2">
             </label>
           </div>
 
@@ -727,9 +738,9 @@ animation: RxDrivesBackground 4s ease-in-out infinite alternate;
 
     const firebaseConfig = {
       apiKey: "AIzaSyBYnYH7A4Ksdlx_wVxU6SkNWkv-0TtIKGQ",
-      authDomain: "RxDrives-ed04c.firebaseapp.com",
-      projectId: "RxDrives-ed04c",
-      storageBucket: "RxDrives-ed04c.firebasestorage.app",
+      authDomain: "rxdrives-ed04c.firebaseapp.com",
+      projectId: "rxdrives-ed04c",
+      storageBucket: "rxdrives-ed04c.firebasestorage.app",
       messagingSenderId: "750034881280",
       appId: "1:750034881280:web:3a10cb168a82f1c18181e5",
       measurementId: "G-6B350M0WP2"
